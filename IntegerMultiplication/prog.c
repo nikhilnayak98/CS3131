@@ -5,74 +5,63 @@ Desc - Integer Multiplication
 */
 #include <stdio.h>
 #include <math.h>
-int integer_mul(int, int, int);
-int cal_digits(int);
-int convert_to_binary(int);
+long prod(long, long);
+long noOfDigit(long, long);
 void main()
 {
-	int base, num1, num2, product;
-	printf("\nEnter Base - ");
-	scanf("%d", &base);
-	printf("\nEnter Number 1 - ");
-	scanf("%d", &num1);
-	printf("\nEnter Number 2 - ");
-	scanf("%d", &num2);
-	product = integer_mul(base, num1, num2);
-	if(base == 2)
-		product = convert_to_binary(product);
-	printf("\nProduct - %d\n", product);
+    long m, n;
+    printf("\n Enter number 1 - ");
+    scanf("%ld", &m);
+    printf("\n Enter number 2 - ");
+    scanf("%ld", &n);
+    
+    printf("\n Multiplication of %ld and %ld is - %ld\n", m, n, prod(m, n));
 }
-
-int integer_mul(int base, int num1, int num2)
+ 
+long prod(long u, long v)
 {
-	int x_left, y_left, x_right, y_right, product = 0;
-	int dig_num1 = cal_digits(num1), dig_num2 = cal_digits(num2);
-	
-	if(dig_num1 > 1)
-	{
-		x_left = num1 / pow(10,  ceil(dig_num1 / 2));
-		y_left = num2 / pow(10,  ceil(dig_num2 / 2));
-	
-		x_right = num1 % (int)pow(10, ceil(dig_num1 / 2));
-		y_right = num2 % (int)pow(10, ceil(dig_num1 / 2));
-	
-		product = ((int)pow(base, dig_num1) * x_left * y_left) +
-							((int)pow(base, ceil(dig_num1 / 2))) * (((x_left + x_right) * (x_left + y_right)) -
-							(x_left * y_left) - (x_right * y_right)) + (x_right * y_right);
-		integer_mul(base, x_left, x_right);
-		integer_mul(base, y_left, y_right);
-	}
-	
-	return product;
+    long x, y, w, z, n, m, p, q, r;
+    n = noOfDigit(u, v);
+    
+    if(u == 0 || v == 0)
+    {
+        return 0;
+    }
+    else if(n <= 2)
+    {
+        return (u * v);
+    }
+    else
+    {
+        m = floor(n / 2);
+        w = u/pow(10, m);
+        x = u % (int)pow(10, m);
+        y = v/ pow(10, m);
+        z = v % (int)pow(10, m);
+        
+        p = prod(w, y);
+        q = prod(x, z);
+        r = prod(w + x, y + z);
+        
+        return (p * pow(10, 2 * m) + (r - p - q) * pow(10, m) + q);
+    }
 }
-
-int cal_digits(int num)
+ 
+ 
+long noOfDigit(long m, long n)
 {
-	int ctr = 0;
-	while(num != 0)
-	{
-		ctr++;
-		num /= 10;
-	}
-	return ctr;
-}
+    long max;
+    int b = 0;
+    
+    if(m>=n)
+        max=m;
+    else
+        max = n;
 
-int convert_to_binary(int num)
-{
-	int r, binary = 0, result = 0;
-	while(num > 0)
-	{
-		r = num % 2;
-		binary = (binary * 10) + r;
-		num /= 2;
-	}
-	
-	while(binary > 0)
-	{
-		r = binary % 10;
-		result = (result * 10) + r;
-		binary /= 10;
-	}
-	
-	return result;
+    while(max > 0)
+    {
+        max = max / 10;
+        b++;
+    }
+    return b;
 }
